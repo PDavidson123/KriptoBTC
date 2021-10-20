@@ -8,6 +8,7 @@ namespace KriptoBTC
 		static void Main(string[] args)
 		{
 			List <Block> blockchain = new List<Block>();
+			blockchain.Add(new Block("","", false));
 
 			User garry = new User("Garry");
 			User avokado = new User("Avocado");
@@ -40,16 +41,14 @@ namespace KriptoBTC
 				}
 			}
 
-			/*for(int i=0;i<hashes.Count;i++)
-			{
-				Console.WriteLine(i + ". " + hashes[i]);
-			}*/
-
 			Console.WriteLine("Merkle root: " + BuildMerkleRoot(hashes));
 			string root = BuildMerkleRoot(hashes);
-			Block asd2 = new Block("", root);
-			Console.WriteLine("Mining started");
-			Console.WriteLine(asd2.MineBlock(4));
+			Console.WriteLine("Block létrehozása");
+			Block newblock = new Block(blockchain[blockchain.Count-1].GetPreviousHash(), root, true);
+			Console.WriteLine("Block létrehozva");
+			blockchain.Add(newblock);
+
+			Console.WriteLine("Block (mined) data: " + blockchain[blockchain.Count - 1].BlockData);
 		}
 
 		private static string BuildMerkleRoot(List<string> merkelLeaves)

@@ -8,25 +8,23 @@ namespace KriptoBTC
 {
     class Block
     {
-        public int BlockNumber { get; set; }
-        public string HashB { get; set; }
+        public string BlockData { get; set; }
         public string PreviousHash { get; set; }
         public int Nonce { get; set; }
         public string TimeStamp { get; set; }
-
         public string RootHash { get; set; }
 
-        private int number = 0;
-
         private Random rnd = new Random(int.MaxValue);
-		public Block(string previousHash, string rootHash)
+		public Block(string previousHash, string rootHash, bool realBlock)
 		{
-            BlockNumber = number;
-            number++;
 			PreviousHash = previousHash;
-            HashB = SHA256Class.ComputeSha256Hash(this.PreviousHash + this.TimeStamp + this.RootHash + this.Nonce);
             TimeStamp = GetTimestamp(DateTime.Now);
             RootHash = rootHash;
+
+            if (realBlock)
+                BlockData = MineBlock(3);
+            else
+                BlockData = "";
 
             /*Console.WriteLine(Data);
             Console.WriteLine(PreviousHash);
@@ -34,12 +32,17 @@ namespace KriptoBTC
             Console.WriteLine(Hash);*/
         }
 
+        public string GetPreviousHash()
+        {
+            return this.BlockData;
+        }
+
         public static String GetTimestamp(DateTime value)
         {
             return value.ToString("yyyyMMddHHmmssffff");
         }
 
-        public string MineBlock(int diff)
+        private string MineBlock(int diff)
         {
             string zeros = new string('0', diff);
 
@@ -52,7 +55,9 @@ namespace KriptoBTC
             return CreateHash();
         }
 
-        public string CreateHash()
+
+
+        private string CreateHash()
         {
             using (SHA256 sha256 = SHA256.Create())
             {
